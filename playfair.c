@@ -4,7 +4,7 @@
 #include <string.h>
 
 char matrix[5][5];
-int encrypted = 0; /* encryption state for current run */
+int encrypted = 0; 
 
 int validateKey(char key[])
 {
@@ -262,3 +262,4 @@ int main()
             printf("Invalid choice\n");
     }
 }
+
