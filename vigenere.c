@@ -8,9 +8,6 @@ void decryptFile();
 int main()
 {
     int ch;
-
-    // remove("status.txt");   /* RESET ENCRYPTION STATE */
-
     while (1)
     {
         printf("\n1. Encrypt\n2. Decrypt\n3. Exit\n");
@@ -93,10 +90,6 @@ void encryptFile()
 
     fclose(fin);
     fclose(fout);
-
-    //  fstatus = fopen("status.txt", "w");
-    // fclose(fstatus);
-
     printf("Encryption done\n");
 }
 
@@ -105,14 +98,6 @@ void decryptFile()
     FILE *fin, *fout, *fstatus;
     char key[50], ch;
     int i, klen, shift;
-
-    //  fstatus = fopen("status.txt", "r");
-    //  if (fstatus == NULL)
-    //  {
-    //     printf("Encryption not done\n");
-    //     return;
-    // }
-    // fclose(fstatus);
 
     fin = fopen("encrypt.txt", "r");
     if (fin == NULL)
@@ -176,3 +161,4 @@ void decryptFile()
 
     printf("Decryption done\n");
 }
+
