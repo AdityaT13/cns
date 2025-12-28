@@ -1,107 +1,108 @@
-
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
-void caesarEncrypt(char *text, char *cipher, int key)
-{
-    int i;
-    for (i = 0; text[i] != '\0'; i++)
-    {
-        char c = text[i];
-        if (isalpha(c))
-        {
-            char base = isupper(c) ? 'A' : 'a';
-            cipher[i] = (c - base + key) % 26 + base;
-        }
-        else
-        {
-            cipher[i] = c;
-        }
-    }
-    cipher[i] = '\0';
-    printf("%s\n", cipher);
-}
-void caesarDecrypt(char *text, char *plain, int key)
-{
-    int i;
-    for (i = 0; text[i] != '\0'; i++)
-    {
-        char c = text[i];
-        if (isalpha(c))
-        {
-            char base = isupper(c) ? 'A' : 'a';
-            plain[i] = (c - base - key + 26) % 26 + base;
-        }
-        else
-        {
-            plain[i] = c;
-        }
-    }
-    plain[i] = '\0';
-    printf("%s\n", plain);
-}
+
+void encryptFile();
+void decryptFile();
+
 int main()
 {
-    FILE *fin, *fout;
-    char text[1000], result[1000], filename[200];
-    int choice, key;
-    printf("Enter key (shift value): ");
-    scanf("%d", &key);
-    getchar();
+    int choice;
     while (1)
     {
-        printf("\n1. Encrypt\n");
-        printf("2. Decrypt\n");
-        printf("3. End\n");
-        printf("Enter choice: ");
+        printf("\n--- Caesar Cipher Menu ---\n");
+        printf("1. Encrypt File\n");
+        printf("2. Decrypt File\n");
+        printf("3. Exit\n");
+        printf("Enter your choice: ");
         scanf("%d", &choice);
         getchar();
-        if (choice == 1)
+
+        switch (choice)
         {
-            printf("Enter the input file name for encryption: ");
-            scanf("%s", filename);
-            fin = fopen(filename, "r");
-            if (!fin)
-            {
-                printf("Error: File '%s' not found\n", filename);
-                continue;
-            }
-            fgets(text, sizeof(text), fin);
-            fclose(fin);
-            caesarEncrypt(text, result, key);
-            fout = fopen("encrypt.txt", "w");
-            fputs(result, fout);
-            fclose(fout);
-            printf("Encryption complete. Output saved to encrypt.txt\n");
-        }
-        else if (choice == 2)
-        {
-            printf("Enter the encrypted file name (usually encrypt.txt): ");
-            scanf("%s", filename);
-            fin = fopen(filename, "r");
-            if (!fin)
-            {
-                printf("Error: File '%s' not found\n", filename);
-                continue;
-            }
-            fgets(text, sizeof(text), fin);
-            fclose(fin);
-            caesarDecrypt(text, result, key);
-            fout = fopen("decrypt.txt", "w");
-            fputs(result, fout);
-            fclose(fout);
-            printf("Decryption complete. Output saved to decrypt.txt\n");
-        }
-        else if (choice == 3)
-        {
-            printf("Exiting program.\n");
+        case 1:
+            encryptFile();
             break;
-        }
-        else
-        {
-            printf("Invalid choice! Try again.\n");
+        case 2:
+            decryptFile();
+            break;
+        case 3:
+            printf("Exiting...\n");
+            exit(0);
+        default:
+            printf("Invalid choice!\n");
         }
     }
     return 0;
+}
+
+void encryptFile()
+{
+    FILE *fin, *fout;
+    char ch, in[50], out[50];
+    int key;
+
+    printf("Enter input file name: ");
+    scanf("%s", in);
+    printf("Enter output file name: ");
+    scanf("%s", out);
+
+    fin = fopen(in, "r");
+    fout = fopen(out, "w");
+    if (fin == NULL || fout == NULL)
+    {
+        printf("Error opening file!\n");
+        return;
+    }
+
+    printf("Enter encryption key (1-25): ");
+    scanf("%d", &key);
+
+    while ((ch = fgetc(fin)) != EOF)
+    {
+        if (ch >= 'a' && ch <= 'z')
+            ch = ((ch - 'a' + key) % 26) + 'a';
+        else if (ch >= 'A' && ch <= 'Z')
+            ch = ((ch - 'A' + key) % 26) + 'A';
+        fputc(ch, fout);
+    }
+
+    fclose(fin);
+    fclose(fout);
+    printf("Encryption completed! Encrypted text saved in encrypt.txt\n");
+}
+
+void decryptFile()
+{
+    FILE *fin, *fout;
+    char ch, in[50], out[50];
+    int key;
+
+    printf("Enter input file name: ");
+    scanf("%s", in);
+    printf("Enter output file name: ");
+    scanf("%s", out);
+
+    fin = fopen(in, "r");
+    fout = fopen(out, "w");
+    if (fin == NULL || fout == NULL)
+    {
+        printf("Error opening file!\n");
+        return;
+    }
+
+    printf("Enter decryption key (1-25): ");
+    scanf("%d", &key);
+
+    while ((ch = fgetc(fin)) != EOF)
+    {
+        if (ch >= 'a' && ch <= 'z')
+            ch = ((ch - 'a' - key + 26) % 26) + 'a';
+        else if (ch >= 'A' && ch <= 'Z')
+            ch = ((ch - 'A' - key + 26) % 26) + 'A';
+        fputc(ch, fout);
+    }
+
+    fclose(fin);
+    fclose(fout);
+    printf("Decryption completed! Decrypted text saved in decrypt.txt\n");
 }
