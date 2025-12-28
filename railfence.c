@@ -6,7 +6,7 @@
 void encryptFile();
 void decryptFile();
 
-int encrypted = 0; /* encryption state */
+int encrypted = 0;
 
 int main()
 {
@@ -231,3 +231,4 @@ void decryptFile()
     fclose(fout);
     printf("Decryption done\n");
 }
+
